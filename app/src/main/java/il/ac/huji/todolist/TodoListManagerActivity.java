@@ -1,5 +1,8 @@
 package il.ac.huji.todolist;
 
+import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 
 public class TodoListManagerActivity extends AppCompatActivity {
     private ArrayList<String> items;
-    private ArrayAdapter<String> itemsAdapter;
+    private SpecialAdapter itemsAdapter;
     private ListView lvItems;
 
     private void readItems() {
@@ -69,8 +72,10 @@ public class TodoListManagerActivity extends AppCompatActivity {
         lvItems = (ListView) findViewById(R.id.lvItems);
         items = new ArrayList<String>();
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, items);
+       // itemsAdapter = new ArrayAdapter<String>(this,
+        //        android.R.layout.simple_list_item_1, items);
+         itemsAdapter = new SpecialAdapter(this , R.layout.row, items);
+
         lvItems.setAdapter(itemsAdapter);
         registerForContextMenu(lvItems);
 
@@ -113,6 +118,14 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        itemsAdapter.remove(itemsAdapter.getItem(info.position));
+        return super.onContextItemSelected(item);
+
+    }
+
     public void onAddItem(MenuItem v) {
         EditText etNewItem = (EditText) findViewById(R.id.inputEditText);
         String itemText = etNewItem.getText().toString();
@@ -122,11 +135,10 @@ public class TodoListManagerActivity extends AppCompatActivity {
     }
 
     public void onDeleteItem(MenuItem v) {
-        EditText etNewItem = (EditText) findViewById(R.id.inputEditText);
-        String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-        writeItems();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) v.getMenuInfo();
+        itemsAdapter.remove(itemsAdapter.getItem(info.position));
+
     }
 
 

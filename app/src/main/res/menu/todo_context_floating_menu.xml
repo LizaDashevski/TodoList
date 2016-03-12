@@ -6,8 +6,8 @@
 
     <item
         android:id="@+id/delete_item"
-        android:title="@string/fmenu_delete"
-        android:onClick="onDeleteItem"
-        />
+        android:title="@string/fmenu_delete" />
+        //android:onClick="onDeleteItem"
+        // />
 
 </menu>
