@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".TodoListManagerActivity">
 
+
+
+
     <item
         android:id="@+id/delete_item"
         android:title="@string/fmenu_delete" />
-        //android:onClick="onDeleteItem"
-        // />
 
 </menu>

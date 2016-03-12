@@ -3,6 +3,7 @@ package il.ac.huji.todolist;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -113,6 +114,11 @@ public class TodoListManagerActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        menu.setHeaderTitle(itemsAdapter.getItem(info.position).toString());
+
+
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.todo_context_floating_menu , menu);
 
