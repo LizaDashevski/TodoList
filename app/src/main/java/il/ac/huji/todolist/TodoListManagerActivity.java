@@ -3,6 +3,7 @@ package il.ac.huji.todolist;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.content.Intent;
+
 
 import org.apache.commons.io.FileUtils;
 
@@ -23,7 +26,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TodoListManagerActivity extends AppCompatActivity {
-    private ArrayList<String> items;
+    static final int NEW_ITEM_REQUEST = 1;
+    public final static String EXTRA_MESSAGE = "il.ac.huji.todolist.MESSAGE";
+    public final static String EXTRA_MESSAGE2 = "il.ac.huji.todolist.MESSAGE2";
+
+    private ArrayList<Item> items;
     private SpecialAdapter itemsAdapter;
     private ListView lvItems;
 
@@ -31,9 +38,9 @@ public class TodoListManagerActivity extends AppCompatActivity {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
+            items = new ArrayList<Item>(FileUtils.readLines(todoFile));
         } catch (IOException e) {
-            items = new ArrayList<String>();
+            items = new ArrayList<Item>();
         }
     }
 
@@ -47,23 +54,6 @@ public class TodoListManagerActivity extends AppCompatActivity {
         }
     }
 
-    private void setupListViewListener() {
-        lvItems.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> adapter,
-                                                   View item, int pos, long id) {
-                        items.remove(pos);
-                        itemsAdapter.notifyDataSetChanged();
-                        writeItems();
-                        return true;
-                    }
-
-                });
-    }
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,17 +61,15 @@ public class TodoListManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_todo_list_manager);
 
         lvItems = (ListView) findViewById(R.id.lvItems);
-        items = new ArrayList<String>();
+        items = new ArrayList<Item>();
         readItems();
-       // itemsAdapter = new ArrayAdapter<String>(this,
-        //        android.R.layout.simple_list_item_1, items);
-         itemsAdapter = new SpecialAdapter(this , R.layout.row, items);
+
+        itemsAdapter = new SpecialAdapter(this , R.layout.row, items);
 
         lvItems.setAdapter(itemsAdapter);
         registerForContextMenu(lvItems);
 
 
-     //   setupListViewListener();
 
 
     }
@@ -120,32 +108,55 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
 
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.todo_context_floating_menu , menu);
+        menuInflater.inflate(R.menu.todo_context_floating_menu, menu);
 
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        itemsAdapter.remove(itemsAdapter.getItem(info.position));
+        itemsAdapter.remove(itemsAdapter.getItem(info.position)); //Why not deleting???
+        itemsAdapter.notifyDataSetChanged();
+        writeItems();
+
         return super.onContextItemSelected(item);
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case NEW_ITEM_REQUEST:
+                String itemT = data.getStringExtra(EXTRA_MESSAGE);
+                String itemDate = data.getStringExtra(EXTRA_MESSAGE2);
+                itemsAdapter.add(new Item(itemT , itemDate));
+
+                writeItems();
+
+
+
+
+        }
+    }
+
     public void onAddItem(MenuItem v) {
-        EditText etNewItem = (EditText) findViewById(R.id.inputEditText);
-        String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-        writeItems();
+        Intent intent = new Intent(this, AddNewTodoItemActivity.class);
+
+
+        EditText etNewItem = (EditText) findViewById(R.id.edtNewItem);
+        //String message = etNewItem.getText().toString();
+        //intent.putExtra(EXTRA_MESSAGE, message);
+        //startActivityForResult(intent, NEW_ITEM_REQUEST);
+        startActivityForResult(intent , NEW_ITEM_REQUEST);
+
+        //String itemText = etNewItem.getText().toString();
+        //itemsAdapter.add(message);
+        //etNewItem.setText("");
+        //writeItems();
     }
 
-    public void onDeleteItem(MenuItem v) {
-
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) v.getMenuInfo();
-        itemsAdapter.remove(itemsAdapter.getItem(info.position));
-
-    }
 
 
 }

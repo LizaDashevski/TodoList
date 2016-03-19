@@ -12,15 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class SpecialAdapter extends ArrayAdapter<String> {
+public class SpecialAdapter extends ArrayAdapter<Item> {
     final Context c;
-    private ArrayList<String> items;
+    private ArrayList<Item> items;
     private int[] colors = new int[] { 0x30FF0000, 0x300000FF };
 
-    public SpecialAdapter(Context context, int resource, ArrayList<String> objects) {
+    public SpecialAdapter(Context context, int resource, ArrayList<Item> objects) {
         super(context, resource, objects);
 
         this.c = context;
@@ -28,10 +29,7 @@ public class SpecialAdapter extends ArrayAdapter<String> {
     }
 
 
-    /*public SpecialAdapter(Context context) {
-        super(context,R.layout.activity_todo_list_manager);
-        this.c = context;
-    }*/
+
 
 
     @Override
@@ -44,10 +42,13 @@ public class SpecialAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.row, parent, false);
 
         // 3. Get the two text view from the rowView
-        TextView valueView = (TextView) rowView.findViewById(R.id.value);
+        TextView valueView = (TextView) rowView.findViewById(R.id.txtTodoTitle);
+        TextView dateView = (TextView) rowView.findViewById(R.id.txtTodoDueDate);
+
 
         // 4. Set the text for textView
-        valueView.setText(items.get(position).toString());
+        valueView.setText(items.get(position).getTitle());
+        dateView.setText(items.get(position).getDescription());
 
 
 
@@ -57,4 +58,9 @@ public class SpecialAdapter extends ArrayAdapter<String> {
         rowView.setBackgroundColor(colors[colorPos]);
         return rowView;
     }
+
+
+
 }
+
+

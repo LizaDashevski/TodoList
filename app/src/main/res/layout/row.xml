@@ -4,15 +4,33 @@
     android:layout_height="wrap_content"
     >
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
 
 
     <TextView
-        android:id="@+id/value"
+        android:id="@+id/txtTodoTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:layout_weight="0.4"
+        android:gravity="center"
+        android:textSize="20sp"
         android:paddingLeft="5dp"
-        >
-    </TextView>
+        />
+        <TextView
+            android:id="@+id/txtTodoDueDate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            />
 
+
+    </LinearLayout>
 </RelativeLayout>
+
