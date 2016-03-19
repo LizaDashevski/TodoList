@@ -9,18 +9,19 @@ public class Item {
     private String title;
     private String description;
     private boolean color;
+    private String phone;
 
-    public Item(String title, String description , boolean color) {
+    public Item(String title, String description , boolean color , String phone) {
         super();
         this.title = title;
         this.description = description;
         this.color = color;
+        this.phone = phone;
     }
 
     public String getTitle() {
         return title;
     }
-
 
     public String getDescription() {
         return description;
@@ -30,8 +31,8 @@ public class Item {
         return color;
     }
 
-    public void setColor(boolean col) {
-        this.color = col;
+    public String getPhone() {
+        return phone;
     }
 }
 

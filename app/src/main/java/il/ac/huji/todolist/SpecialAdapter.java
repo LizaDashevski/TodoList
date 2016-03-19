@@ -30,9 +30,6 @@ public class SpecialAdapter extends ArrayAdapter<Item> {
     }
 
 
-
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -59,21 +56,12 @@ public class SpecialAdapter extends ArrayAdapter<Item> {
             dateView.setTextColor(Color.GRAY);
             valueView.setText(items.get(position).getTitle());
             dateView.setText(items.get(position).getDescription());
-
         }
 
-
-
-
-
-        //View view = super.getView(position, convertView, parent);
         int colorPos = position % colors.length;
         rowView.setBackgroundColor(colors[colorPos]);
         return rowView;
     }
-
-
-
 }
 
 

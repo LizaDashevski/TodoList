@@ -19,6 +19,8 @@ public class AddNewTodoItemActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "il.ac.huji.todolist.MESSAGE";
     public final static String EXTRA_MESSAGE2 = "il.ac.huji.todolist.MESSAGE2";
     public final static String EXTRA_MESSAGE3 = "il.ac.huji.todolist.MESSAGE3";
+    public final static String EXTRA_MESSAGE4 = "il.ac.huji.todolist.MESSAGE4";
+
 
 
     @Override
@@ -78,9 +80,32 @@ public class AddNewTodoItemActivity extends AppCompatActivity {
 
         }
 
+        result.putExtra(EXTRA_MESSAGE4, phoneNum(message));
+
+
+
+
         setResult(RESULT_OK, result);
         finish();
     }
+
+    private String phoneNum (String title) {
+        String lowtit = title.toLowerCase();
+        boolean call = lowtit.startsWith("call");
+        if(call){
+            String[] strarr = lowtit.split(" ",2);
+            return strarr[1];
+        }
+        return "";
+    }
+
+    public void cancelItem(View view) {
+        Intent result = new Intent();
+        setResult(RESULT_CANCELED, result);
+        finish();
+    }
 }
+
+
 
 

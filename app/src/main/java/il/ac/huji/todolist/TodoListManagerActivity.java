@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -30,6 +31,8 @@ public class TodoListManagerActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "il.ac.huji.todolist.MESSAGE";
     public final static String EXTRA_MESSAGE2 = "il.ac.huji.todolist.MESSAGE2";
     public final static String EXTRA_MESSAGE3 = "il.ac.huji.todolist.MESSAGE3";
+    public final static String EXTRA_MESSAGE4 = "il.ac.huji.todolist.MESSAGE4";
+
 
 
     private ArrayList<Item> items;
@@ -103,25 +106,46 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        //super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        menu.setHeaderTitle(itemsAdapter.getItem(info.position).toString());
+        menu.setHeaderTitle(itemsAdapter.getItem(info.position).getTitle());
 
+        String phoneNumber = itemsAdapter.getItem(info.position).getPhone();
+        if(!phoneNumber.equals("")){
+            menu.add(0,0,0,itemsAdapter.getItem(info.position).getTitle());
+
+        }
 
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.todo_context_floating_menu, menu);
 
     }
 
+
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        itemsAdapter.remove(itemsAdapter.getItem(info.position)); //Why not deleting???
-        itemsAdapter.notifyDataSetChanged();
-        //writeItems();
 
-        return super.onContextItemSelected(item);
+
+
+
+
+        switch (item.getItemId()) {
+            case R.id.delete_item:
+                itemsAdapter.remove(itemsAdapter.getItem(info.position));
+                itemsAdapter.notifyDataSetChanged();
+                //writeItems();
+                return true;
+            case 0:
+                String phoneNumber = itemsAdapter.getItem(info.position).getPhone();
+                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                startActivity(dial);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
 
     }
 
@@ -131,33 +155,26 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
         switch (requestCode){
             case NEW_ITEM_REQUEST:
-                String itemT = data.getStringExtra(EXTRA_MESSAGE);
-                String itemDate = data.getStringExtra(EXTRA_MESSAGE2);
-                String isred = data.getStringExtra(EXTRA_MESSAGE3);
-                if(isred.equals("1")) {
-                    itemsAdapter.add(new Item(itemT, itemDate, true));
-                }
-                else{
-                    itemsAdapter.add(new Item(itemT, itemDate, false));
-                }
+                if(resultCode == Activity.RESULT_OK) {
+                    String itemT = data.getStringExtra(EXTRA_MESSAGE);
+                    String itemDate = data.getStringExtra(EXTRA_MESSAGE2);
+                    String isred = data.getStringExtra(EXTRA_MESSAGE3);
+                    String phoneNumber = data.getStringExtra(EXTRA_MESSAGE4);
 
+                    if (isred.equals("1")) {
+                        itemsAdapter.add(new Item(itemT, itemDate, true, phoneNumber));
+                    } else {
+                        itemsAdapter.add(new Item(itemT, itemDate, false, phoneNumber));
+                    }
+                }
 
                // writeItems();
-
-
-
 
         }
     }
 
     public void onAddItem(MenuItem v) {
         Intent intent = new Intent(this, AddNewTodoItemActivity.class);
-
-
-        EditText etNewItem = (EditText) findViewById(R.id.edtNewItem);
-        //String message = etNewItem.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        //startActivityForResult(intent, NEW_ITEM_REQUEST);
         startActivityForResult(intent , NEW_ITEM_REQUEST);
 
         //String itemText = etNewItem.getText().toString();
@@ -165,7 +182,5 @@ public class TodoListManagerActivity extends AppCompatActivity {
         //etNewItem.setText("");
         //writeItems();
     }
-
-
 
 }
