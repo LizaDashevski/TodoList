@@ -10,10 +10,15 @@ import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class AddNewTodoItemActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "il.ac.huji.todolist.MESSAGE";
     public final static String EXTRA_MESSAGE2 = "il.ac.huji.todolist.MESSAGE2";
-
+    public final static String EXTRA_MESSAGE3 = "il.ac.huji.todolist.MESSAGE3";
 
 
     @Override
@@ -45,22 +50,37 @@ public class AddNewTodoItemActivity extends AppCompatActivity {
     }
 
 
-    public void addItem(View v) {
+    public void addItem(View v) throws ParseException {
         EditText etNewItem = (EditText) findViewById(R.id.edtNewItem);
         String message = etNewItem.getText().toString();
 
         DatePicker date = (DatePicker) findViewById(R.id.datePicker);
         Integer dobYear = date.getYear();
-        Integer dobMonth = date.getMonth();
+        Integer dobMonth = date.getMonth() + 1;
         Integer dobDate = date.getDayOfMonth();
         StringBuilder sb = new StringBuilder();
-        sb.append(dobYear.toString()).append("/").append(dobMonth.toString()).append("/").append(dobDate.toString());
-        String dobStr=sb.toString();
+        sb.append(dobYear.toString()).append("-").append(dobMonth.toString()).append("-").append(dobDate.toString());
+        String dobStr = sb.toString();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date d = sdf.parse(dobStr);
+
 
         Intent result = new Intent();
         result.putExtra(EXTRA_MESSAGE, message);
         result.putExtra(EXTRA_MESSAGE2, dobStr);
+        Calendar now = Calendar.getInstance();
+        int res = now.getTime().compareTo(d);
+        if (res>=0) {
+            result.putExtra(EXTRA_MESSAGE3, "");
+        } else {
+            result.putExtra(EXTRA_MESSAGE3, "1");
+
+        }
+
         setResult(RESULT_OK, result);
         finish();
     }
 }
+
+

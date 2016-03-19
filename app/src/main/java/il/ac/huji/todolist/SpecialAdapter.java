@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,20 @@ public class SpecialAdapter extends ArrayAdapter<Item> {
 
 
         // 4. Set the text for textView
-        valueView.setText(items.get(position).getTitle());
-        dateView.setText(items.get(position).getDescription());
+        if(items.get(position).getColor() == false){
+            valueView.setTextColor(Color.RED);
+            dateView.setTextColor(Color.RED);
+            valueView.setText(items.get(position).getTitle());
+            dateView.setText(items.get(position).getDescription());
+        }
+        else{
+            valueView.setTextColor(Color.GRAY);
+            dateView.setTextColor(Color.GRAY);
+            valueView.setText(items.get(position).getTitle());
+            dateView.setText(items.get(position).getDescription());
+
+        }
+
 
 
 

@@ -8,11 +8,13 @@ public class Item {
 
     private String title;
     private String description;
+    private boolean color;
 
-    public Item(String title, String description) {
+    public Item(String title, String description , boolean color) {
         super();
         this.title = title;
         this.description = description;
+        this.color = color;
     }
 
     public String getTitle() {
@@ -23,4 +25,13 @@ public class Item {
     public String getDescription() {
         return description;
     }
+
+    public boolean getColor() {
+        return color;
+    }
+
+    public void setColor(boolean col) {
+        this.color = col;
+    }
 }
+

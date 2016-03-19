@@ -29,6 +29,8 @@ public class TodoListManagerActivity extends AppCompatActivity {
     static final int NEW_ITEM_REQUEST = 1;
     public final static String EXTRA_MESSAGE = "il.ac.huji.todolist.MESSAGE";
     public final static String EXTRA_MESSAGE2 = "il.ac.huji.todolist.MESSAGE2";
+    public final static String EXTRA_MESSAGE3 = "il.ac.huji.todolist.MESSAGE3";
+
 
     private ArrayList<Item> items;
     private SpecialAdapter itemsAdapter;
@@ -62,7 +64,7 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
         lvItems = (ListView) findViewById(R.id.lvItems);
         items = new ArrayList<Item>();
-        readItems();
+        //readItems();
 
         itemsAdapter = new SpecialAdapter(this , R.layout.row, items);
 
@@ -117,7 +119,7 @@ public class TodoListManagerActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         itemsAdapter.remove(itemsAdapter.getItem(info.position)); //Why not deleting???
         itemsAdapter.notifyDataSetChanged();
-        writeItems();
+        //writeItems();
 
         return super.onContextItemSelected(item);
 
@@ -131,9 +133,16 @@ public class TodoListManagerActivity extends AppCompatActivity {
             case NEW_ITEM_REQUEST:
                 String itemT = data.getStringExtra(EXTRA_MESSAGE);
                 String itemDate = data.getStringExtra(EXTRA_MESSAGE2);
-                itemsAdapter.add(new Item(itemT , itemDate));
+                String isred = data.getStringExtra(EXTRA_MESSAGE3);
+                if(isred.equals("1")) {
+                    itemsAdapter.add(new Item(itemT, itemDate, true));
+                }
+                else{
+                    itemsAdapter.add(new Item(itemT, itemDate, false));
+                }
 
-                writeItems();
+
+               // writeItems();
 
 
 
