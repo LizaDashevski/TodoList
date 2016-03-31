@@ -39,25 +39,7 @@ public class TodoListManagerActivity extends AppCompatActivity {
     private SpecialAdapter itemsAdapter;
     private ListView lvItems;
 
-    private void readItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            items = new ArrayList<Item>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<Item>();
-        }
-    }
 
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -67,24 +49,17 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
         lvItems = (ListView) findViewById(R.id.lvItems);
         items = new ArrayList<Item>();
-        //readItems();
 
         itemsAdapter = new SpecialAdapter(this , R.layout.row, items);
 
         lvItems.setAdapter(itemsAdapter);
         registerForContextMenu(lvItems);
-
-
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_todo_list_manager, menu);
-
-
         return true;
     }
 
@@ -94,8 +69,6 @@ public class TodoListManagerActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -128,15 +101,10 @@ public class TodoListManagerActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-
-
-
-
         switch (item.getItemId()) {
             case R.id.delete_item:
                 itemsAdapter.remove(itemsAdapter.getItem(info.position));
                 itemsAdapter.notifyDataSetChanged();
-                //writeItems();
                 return true;
             case 0:
                 String phoneNumber = itemsAdapter.getItem(info.position).getPhone();
@@ -167,9 +135,6 @@ public class TodoListManagerActivity extends AppCompatActivity {
                         itemsAdapter.add(new Item(itemT, itemDate, false, phoneNumber));
                     }
                 }
-
-               // writeItems();
-
         }
     }
 
@@ -177,10 +142,6 @@ public class TodoListManagerActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddNewTodoItemActivity.class);
         startActivityForResult(intent , NEW_ITEM_REQUEST);
 
-        //String itemText = etNewItem.getText().toString();
-        //itemsAdapter.add(message);
-        //etNewItem.setText("");
-        //writeItems();
     }
 
 }
